@@ -13,7 +13,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 @Configuration
 @ComponentScan
@@ -24,7 +24,7 @@ public class Application {
   @Bean
   public RedisTemplate<String, String> template(RedisConnectionFactory factory) {
     final StringRedisTemplate template = new StringRedisTemplate(factory);
-    template.setValueSerializer(new JdkSerializationRedisSerializer());
+    template.setValueSerializer(new Jackson2JsonRedisSerializer<>(Book.class));
 
     return template;
   }
