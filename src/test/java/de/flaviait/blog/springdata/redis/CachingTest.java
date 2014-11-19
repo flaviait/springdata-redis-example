@@ -7,15 +7,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.support.SimpleValueWrapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,16 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CachingTest {
 
   private static final String ISBN = "1234567890123";
-
-  @Configuration
-  static class Config {
-
-    @Bean
-    @Primary
-    public CacheManager cacheManager(CacheManager cacheManager) {
-      return Mockito.spy(cacheManager);
-    }
-  }
 
   @Autowired
   private CacheManager cacheManager;
