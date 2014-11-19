@@ -13,32 +13,28 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
+@EnableCaching
 public class Application {
 
-  @Configuration
-  @EnableCaching
-  static class Config {
+  @Bean
+  public RedisTemplate<String, String> template(RedisConnectionFactory factory) {
+    final StringRedisTemplate template = new StringRedisTemplate(factory);
+    template.setValueSerializer(new JdkSerializationRedisSerializer());
 
-    @Bean
-    public RedisTemplate<String, String> template(RedisConnectionFactory factory) {
-      final StringRedisTemplate template = new StringRedisTemplate(factory);
-      template.setValueSerializer(new Jackson2JsonRedisSerializer<Book>(Book.class));
+    return template;
+  }
 
-      return template;
-    }
-
-    @Bean
-    public CacheManager cacheManager(RedisTemplate<?, ?> template) {
-      final RedisCacheManager cacheManager = new RedisCacheManager(template);
-      cacheManager.setTransactionAware(true);
-      cacheManager.setDefaultExpiration(Duration.ofSeconds(5).getSeconds());
-      return cacheManager;
-    }
+  @Bean
+  public CacheManager cacheManager(RedisTemplate<?, ?> template) {
+    final RedisCacheManager cacheManager = new RedisCacheManager(template);
+    cacheManager.setTransactionAware(true);
+    cacheManager.setDefaultExpiration(Duration.ofSeconds(5).getSeconds());
+    return cacheManager;
   }
 
   public static void main(String... args) {
