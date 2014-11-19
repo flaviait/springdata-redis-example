@@ -76,7 +76,7 @@ public class Book implements Serializable {
     this.title = title;
   }
 
-  public void setAuthors(Set<String> authors) {
+  protected void setAuthors(Set<String> authors) {
     this.authors.clear();
     this.authors.addAll(authors);
   }
